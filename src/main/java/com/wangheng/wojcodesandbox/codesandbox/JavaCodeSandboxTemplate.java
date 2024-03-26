@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public abstract class JavaCodeSandboxTemplate implements CodeSandbox{
@@ -61,7 +62,7 @@ public abstract class JavaCodeSandboxTemplate implements CodeSandbox{
         }
     }
 
-    public List<ExecuteMessage> runFile(File userCodeFile,List<String> inputList) throws IOException, InterruptedException {
+    public List<ExecuteMessage> runFile(File userCodeFile,List<String> inputList) throws InterruptedException, IOException, ExecutionException {
         /**
          * 运行java文件
          */
@@ -134,7 +135,7 @@ public abstract class JavaCodeSandboxTemplate implements CodeSandbox{
             file = writeToFile(executeCodeRequest.getCode());
             compileFile(file);
             executeMessages = runFile(file, executeCodeRequest.getInputList());
-        } catch (UserException | IOException | InterruptedException e) {
+        } catch (UserException | IOException | InterruptedException | ExecutionException e) {
             return getErrorResponse(e);
         }finally {
             if(file!=null&&!deleteFile(file)){
